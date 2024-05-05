@@ -1,0 +1,42 @@
+#' Convert a .mat file from honig-et-al raw data to a data frame
+#' @param file Path to the .mat file
+#' @return A data frame with the data and properly labeled columns
+mat2dat <- function(file) {
+  m <- R.matlab::readMat(file)
+  dm <- m$dm[, , 1]
+  fa <- m$fa[, , 1]
+  ex <- m$ex[, , 1]
+  N <- length(dm$betcolor[, 1])
+
+  dat <- data.frame(
+    subject = ex$subj[1],
+    session = ex$session[1],
+    trial = 1:N,
+    resp = dm$betcolor[, 1],
+    rt = dm$resptime[, 1],
+    arc = dm$betarc[, 1],
+    probedid = fa$probed[1:N, 1],
+    probedcol = fa$probedcol[1:N, 1],
+    probeddist = fa$probedist[1:N, 1]
+  )
+
+  dat$resperr <- dat$resp - dat$probedcol
+  stimcols <- as.data.frame(fa$dotcols[1:N, ])
+  names(stimcols) <- c("col1", "col2", "col3", "col4")
+  stimdists <- as.data.frame(fa$dotdist[1:N, ])
+  names(stimdists) <- c("dist1", "dist2", "dist3", "dist4")
+
+  dat <- cbind(dat, stimcols, stimdists)
+  return(dat)
+}
+
+#' Preprocess all .mat files from honig-et-al raw data
+#' @param dir Directory containing the .mat files
+#'
+preprocess_honig_data <- function(dir, output_file) {
+  files <- list.files(dir, pattern = ".mat", full.names = TRUE)
+  dat <- lapply(files, mat2dat)
+  dat <- do.call(rbind, dat)
+  write.csv(dat, output_file, row.names = FALSE)
+  return(invisible(output_file))
+}
