@@ -8,6 +8,7 @@ execute:
 
 website:
   title: "Arc width and continuous reproduction"
+  repo-url: https://github.com/venpopov/guilty-goose/
   navbar:
     left:
       - href: index.qmd
