@@ -1,6 +1,6 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-honig_data|stem|90803b77e9a53dae|a48280e40ce76baf|d698c4528ace92a2|2090220964||t19848.8447834211s|fa3c81fcf06f1826|553675|rds|local|vector|||0.039||
-honig_data_folder|stem|8b71b895e4667a7c|59939ed3bd5a9f3a|2c530c1562a7fbd1|-1938389833|data-raw/honig2020raw/|t19801.4093402778s|9210ec86f345e5dd|1600|file|local|vector|||0||
+honig_data|stem|222ba1c44a71c29c|5e108a0713c57b12|d8f6df414fa5db02|2090220964||t19848.8564648163s|2a595e4361260c7e|620126|rds|local|vector|||2.806||
+honig_data_folder|stem|8b71b895e4667a7c|59939ed3bd5a9f3a|2c530c1562a7fbd1|-1938389833|data-raw/honig2020raw/|t19848.8479565125s|9210ec86f345e5dd|1600|file|local|vector|||0||
 honig_preprocessed_file|stem|ac753446f2039450|5e108a0713c57b12|d1cea546cd9bb99f|1365977787|output/honig_data.csv|t19848.8427025217s|741ad07e07ea7011|1669328|file|local|vector|||0.879||
 mat2dat|function|a45561bb8220fda3|||||||||||||||
-preprocess_honig_data|function|376dc523fd92211d|||||||||||||||
+preprocess_honig_data|function|2aad0a3e3e7c2a36|||||||||||||||

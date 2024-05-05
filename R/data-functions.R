@@ -30,13 +30,40 @@ mat2dat <- function(file) {
   return(dat)
 }
 
+
+
+
+
+
 #' Preprocess all .mat files from honig-et-al raw data
 #' @param dir Directory containing the .mat files
-#'
+#' @return A data frame with the preprocessed data
 preprocess_honig_data <- function(dir, output_file) {
+  # read files and convert to data.frame
+  with
   files <- list.files(dir, pattern = ".mat", full.names = TRUE)
   dat <- lapply(files, mat2dat)
   dat <- do.call(rbind, dat)
+
+  # wrap response error and convert to radians
+
+  dat$resperr <- bmm::deg2rad(dat$resperr)
+  dat$resperr <- bmm::wrap(dat$resperr)
+  dat$arc <- bmm::deg2rad(dat$arc)
+
+
+  # get colors for non-probed items relative to target
+  cols <- dat[, c("col1", "col2", "col3", "col4")]
+  for (i in 1:nrow(cols)) {
+    tid <- dat[i, ]$probedid
+    cols[i, ] <- c(cols[i, tid], cols[i, -tid])
+  }
+  cols <- cols[, -1]
+  cols <- cols
+  names(cols) <- c("nt1col", "nt2col", "nt3col")
+  dat <- cbind(dat, cols)
+
+  # write to file
   write.csv(dat, output_file, row.names = FALSE)
-  return(invisible(output_file))
+  dat
 }

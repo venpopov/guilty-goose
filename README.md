@@ -9,6 +9,8 @@ This repo contains data and code for the Arc-width project.
 
 ## How to download and replicate
 
+TODO: Add instructions for the targets pipeline
+
 1. You can clone the current repository or download the [.zip](https://github.com/venpopov/guilty-goose/archive/refs/heads/master.zip) archive.
 2. Open the `guilty-goose.Rproj` file in RStudio.
 3. Run the following code to install the required packages:
