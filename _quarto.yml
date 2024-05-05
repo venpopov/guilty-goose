@@ -1,0 +1,41 @@
+project:
+  type: website
+  output-dir: docs
+  execute-dir: project
+
+execute: 
+  freeze: auto
+
+website:
+  title: "Arc width and continuous reproduction"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+
+  sidebar:
+    style: docked
+    search: true
+    contents:
+      - text: "Home"
+        href: index.qmd
+      - section: Notebooks
+        contents: notebooks
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    code-link: true
+    code-copy: true
+    code-overflow: wrap
+    grid:
+      sidebar-width: 250px
+      body-width: 900px
+      margin-width: 300px
+
+editor: visual
+
+
+
