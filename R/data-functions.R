@@ -40,17 +40,18 @@ mat2dat <- function(file) {
 #' @return A data frame with the preprocessed data
 preprocess_honig_data <- function(dir, output_file) {
   # read files and convert to data.frame
-  with
   files <- list.files(dir, pattern = ".mat", full.names = TRUE)
   dat <- lapply(files, mat2dat)
   dat <- do.call(rbind, dat)
 
   # wrap response error and convert to radians
-
-  dat$resperr <- bmm::deg2rad(dat$resperr)
-  dat$resperr <- bmm::wrap(dat$resperr)
-  dat$arc <- bmm::deg2rad(dat$arc)
-
+  cols <- c(
+    "resperr", "arc", "probedcol", "probeddist", "resp", "col1", "col2",
+    "col3", "col4", "dist1", "dist2", "dist3", "dist4"
+  )
+  dat[, cols] <- bmm::deg2rad(dat[, cols])
+  cols <- cols[cols != "arc"]
+  dat[, cols] <- bmm::wrap(dat[, cols])
 
   # get colors for non-probed items relative to target
   cols <- dat[, c("col1", "col2", "col3", "col4")]
