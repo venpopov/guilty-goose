@@ -1,0 +1,38 @@
+---
+title: "Explore Honig et al. data"
+author: "Ven Popov"
+---
+
+```{r setup, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(targets)
+```
+
+This is what the data looks like:
+
+```{r}
+tar_load("honig_data")
+head(honig_data)
+```
+
+Number of observations per subject and session:
+
+```{r}
+honig_data |> 
+  group_by(subject, session) |> 
+  summarise(n = n(),
+  b = 1) |> 
+  pivot_wider(names_from = session, values_from = n)
+```
+
+note that sessions 1 and 4 use uniformly distributed stimuli, while sessions 2 and 3 use normally distributed stimuli.
+
+Response error by subject
+
+```{r}
+ggplot(honig_data, aes(resperr)) +
+  geom_histogram() +
+  facet_wrap(~subject) +
+  theme_classic()
+```
+
