@@ -27,3 +27,50 @@ fit_bmm3 <- function(data) {
   model <- bmm::sdm("resperr")
   bmm::bmm(formula, data, model, backend = "cmdstanr", cores = 4)
 }
+
+fit_2p_ss_bmm1 <- function(data) {
+  data <- data |> 
+    dplyr::mutate(setsize = as.factor(setsize)) |> 
+    dplyr::filter(exp_type == "SetS")
+
+  formula <- bmm::bmf(
+    thetat ~ 0 + setsize + (0 + setsize || subject),
+    kappa ~ 0 + setsize + (0 + setsize || subject)
+  )
+  model <- bmm::mixture2p("resperr")
+  bmm::bmm(formula, data, model, backend = "cmdstanr", cores = 4)
+}
+
+fit_2p_time_bmm1 <- function(data) {
+  data <- data |> 
+    dplyr::mutate(encodingtime = as.factor(encodingtime),
+                  delay = as.factor(delay)) |>
+    dplyr::filter(exp_type == "Time")
+
+  formula <- bmm::bmf(
+    thetat ~ 0 + encodingtime:delay + (0 + encodingtime:delay || subject),
+    kappa ~ 0 + encodingtime:delay + (0 + encodingtime:delay || subject)
+  )
+  model <- bmm::mixture2p("resperr")
+  bmm::bmm(formula, data, model, backend = "cmdstanr", cores = 4)
+}
+
+fit_2p_ml <- function(data, by = NULL, ...) {
+  withr::local_package("dplyr")
+  data |> 
+    group_by(across(all_of(by))) |> 
+    mutate(id_var = cur_group_id()) |> 
+    do({
+      mixtur::fit_mixtur(
+        data = .,
+        model = "2_component",
+        unit = "radians",
+        id_var = "id_var",
+        ...
+      )
+    }) |>
+    select(-id) |> 
+    rename(pmem = p_t) |>
+    mutate(sd = bmm::k2sd(kappa)) |>
+    ungroup()
+}

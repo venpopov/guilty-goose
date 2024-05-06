@@ -43,7 +43,7 @@ Extract the bmm parameters for each subject and session:
 ```{r}
 bmm_params <- fit1 |> 
   get_subject_parameters() |>
-  mutate(subject = row_number()) |>
+  rownames_to_column("subject") |>
   pivot_longer(
     cols = -subject, 
     names_to = c(".value", "session"), 
@@ -114,7 +114,7 @@ Extract the bmm parameters for each subject and session:
 ```{r}
 bmm_params2 <- fit2 |> 
   get_subject_parameters() |>
-  mutate(subject = row_number()) |>
+  rownames_to_column("subject") |>
   pivot_longer(
     cols = starts_with("c"),, 
     names_to = c(".value", "session"), 

@@ -1,7 +1,13 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-.Random.seed|object|7937682fe459d996|||||||||||||||
+.Random.seed|object|55a0344225cd9f91|||||||||||||||
+exp1_2p_ml|stem|24567455ad75c7d6|2f12705dd5bf1401|ffa040247416a905|263149486||t19849.1728399147s|fe2586ca9a714825|9447|rds|local|vector|||4.086||
+exp1_2p_ss_bmm|stem|ead8f7681d13b8da|c42b1660c4bf72db|31717bc69a579625|-800637334||t19849.2235600849s|fad12d95a04677b6|15688571|rds|local|vector|||2080.952||
+exp1_2p_time_bmm|stem|3049ec71f0b63f14|c3a67a08494901aa|b959208f69dec448|12959389||t19849.2210182065s|c0abe8b0d05e87ae|16915982|rds|local|vector|||1860.05||
 exp1_data|stem|c3c4e52d5a4d23fd|19c297987c0b627d|c389b1c01c89d73a|-1079929147||t19849.0520631834s|d8a0732e7aaea66e|2471642|rds|local|vector|||2.421||
 exp1_data_file|stem|a7709e06eee0558c|06f236352047bb41|2c530c1562a7fbd1|-2055253181|data-raw/exp1_2021_data.csv|t18779.589525463s|d5c4147ddca702a0|15491872|file|local|vector|||0.028||
+fit_2p_ml|function|e9113aa8e34a8405|||||||||||||||
+fit_2p_ss_bmm1|function|ad8d94899b78970b|||||||||||||||
+fit_2p_time_bmm1|function|7ed9bd6c331873c6|||||||||||||||
 fit_bmm_by_subj|function|ff1f664bada2caf4|||||||||||||||
 fit_bmm_by_subj_and_session|function|110068a9756dab0d|||||||||||||||
 fit_bmm1|function|ff1f664bada2caf4|||||||||||||||
