@@ -1,12 +1,14 @@
 name|type|data|command|depend|seed|path|time|size|bytes|format|repository|iteration|parent|children|seconds|warnings|error
-.Random.seed|object|c136430c27a09113|||||||||||||||
+.Random.seed|object|7937682fe459d996|||||||||||||||
+exp1_data|stem|c3c4e52d5a4d23fd|19c297987c0b627d|c389b1c01c89d73a|-1079929147||t19849.0520631834s|d8a0732e7aaea66e|2471642|rds|local|vector|||2.421||
+exp1_data_file|stem|a7709e06eee0558c|06f236352047bb41|2c530c1562a7fbd1|-2055253181|data-raw/exp1_2021_data.csv|t18779.589525463s|d5c4147ddca702a0|15491872|file|local|vector|||0.028||
 fit_bmm_by_subj|function|ff1f664bada2caf4|||||||||||||||
 fit_bmm_by_subj_and_session|function|110068a9756dab0d|||||||||||||||
 fit_bmm1|function|ff1f664bada2caf4|||||||||||||||
 fit_bmm2|function|2ed88e296a556eb3|||||||||||||||
 fit_bmm3|function|3eb540ab8f52fd87|||||||||||||||
 fit_honig_bmm|function|ff1f664bada2caf4|||||||||||||||
-get_subject_parameters|function|4a9c02f61177aa76|||||||||||||||
+get_subject_parameters|function|34bbd949235459e5|||||||||||||||
 honig_bmm_fit|stem|d30ebd846b30e625|93434f03cddee8d3|3fb5b5d50fe7c794|1313966733||t19848.9022614509s|61b4bb361399a084|1946281|rds|local|vector|||110.567||
 honig_bmm_fit_by_subject|stem|c97386110d8b7b65|ba294f6833266a44|0485b95863c346e7|744543528||t19849.0022906372s|723d5fdec51e549e|1945944|rds|local|vector|||106.291||
 honig_bmm_fit_by_subject_and_session|stem|f41e8bf074bca69d|661d6ce84b3bc7cc|c5819e15e53cca4d|-2003297522||t19849.0010577933s|3eb79f234619f344|4570991|rds|local|vector|||435.886||
@@ -16,4 +18,6 @@ honig_data_folder|stem|8b71b895e4667a7c|59939ed3bd5a9f3a|2c530c1562a7fbd1|-19383
 honig_data_uniform|stem|a569a82b43f7de91|bd12131dcf091bb6|95612a451cc53299|1923044648||t19848.8903402868s|b8116b32402209ec|349714|rds|local|vector|||0.015||
 honig_preprocessed_file|stem|ac753446f2039450|5e108a0713c57b12|d1cea546cd9bb99f|1365977787|output/honig_data.csv|t19848.8427025217s|741ad07e07ea7011|1669328|file|local|vector|||0.879||
 mat2dat|function|a45561bb8220fda3|||||||||||||||
+preprocess_exp1_data|function|a6c9f7e0e940559a|||||||||||||||
 preprocess_honig_data|function|b4debcb90ca89648|||||||||||||||
+theme_Publication|function|5bb5c545f73fbd92|||||||||||||||

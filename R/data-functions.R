@@ -68,3 +68,23 @@ preprocess_honig_data <- function(dir, output_file) {
   write.csv(dat, output_file, row.names = FALSE)
   dat
 }
+
+
+preprocess_exp1_data <- function(input_file, output_file) {
+  data <- read.csv(input_file)
+  data[data == 999] <- NA
+  col <- colnames(data)
+  col <- col[grepl("p[1-8]color", col) | grepl("[a|A]ngle", col) | grepl("Color", col)]
+  data[, col] <- data[, col] |>
+    bmm::deg2rad() |>
+    bmm::wrap()
+  data <- dplyr::filter(data, arcsize <= 180) |>
+    dplyr::rename(
+      resperr = anglediff,
+      arc = arcsize
+    ) |>
+    dplyr::mutate(arc = bmm::deg2rad(arc * 2))
+
+  write.csv(data, output_file, row.names = FALSE)
+  data
+}
