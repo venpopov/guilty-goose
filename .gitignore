@@ -6,4 +6,5 @@
 .quarto
 /.quarto/
 docs
+dev
 _freeze
