@@ -1,0 +1,274 @@
+---
+title: "Exp. 1: Exploratory Data Analysis"
+format: html
+---
+
+```{r setup}
+#| message: FALSE
+#| include: false
+knitr::opts_chunk$set(message = FALSE)
+```
+
+```{r initialize, message=FALSE, warning=FALSE}
+library(targets)
+library(tidyverse)
+library(patchwork)
+library(mixtur)
+tar_source()
+theme_set(theme_Publication())
+```
+
+load the preprocessed data
+
+```{r}
+tar_load("exp1_data")
+head(exp1_data)
+```
+
+
+### Arc width is affected by set size, encoding duration and retention interval
+
+```{r fig.width=10, fig.height=5}
+pa1 <- exp1_data |>
+  filter(exp_type == "SetS") |>
+  ggplot(aes(resperr, color=as.factor(setsize))) +
+  geom_density(linewidth=1) +
+  scale_x_continuous('Point response angle difference (rad)') +
+  theme(legend.position="none") +
+  ylab('\nDensity') +
+  ggtitle('A')
+
+pa2 <- exp1_data |>
+  filter(exp_type == "SetS") |>
+  ggplot(aes(arc, color=as.factor(setsize))) +
+  geom_density(linewidth=1) +
+  scale_color_discrete('Set size') +
+  scale_x_continuous("Arc width (rad)") +
+  ylab("") +
+  theme(legend.justification.inside = c(1,1),
+        legend.position = "inside")
+
+pa1+pa2
+```
+
+### Plot the effect of setsize on sd(angle error) and the mean(arcwidth)
+
+```{r fig.width=8, fig.height=4}
+exp1_data |>
+  filter(exp_type == "SetS") |>
+  group_by(setsize, subject) |>
+  summarise(err = sd(resperr)) |>
+  ggplot(aes(setsize, err)) +
+  stat_summary(geom="pointrange") +
+  stat_summary(geom="line") +
+  ylab('SD(angle error)') +
+  ggtitle('B')
+
+exp1_data |>
+  filter(exp_type == "SetS") |>
+  group_by(setsize, subject) |>
+  ggplot(aes(setsize, arc)) +
+  stat_summary(geom="pointrange") +
+  stat_summary(geom="line") +
+  ylab('Mean Arc Width')
+```
+
+### Fit 2-component mixture model to the setsize data
+
+```{r fig.width=8, fig.height=4}
+#| message: FALSE
+
+ss_mm <- exp1_data |>
+  filter(exp_type == "SetS") |>
+  group_by(subject,setsize) |>
+  do({fit_mixtur(., model = "2_component", unit = "radians", id_var = "setsize", 
+      response_var = "responseColor", target_var = "presentedColor")})  |> 
+  mutate(sdrad = bmm::k2sd(kappa))  |> 
+  filter(!is.infinite(sdrad))
+
+pb1 <- ss_mm |>
+  group_by(setsize) |>
+  summarise(sd = mean(sdrad, na.rm = TRUE)) |>
+  ggplot(aes(setsize, sd)) +
+  stat_summary(geom="point", size=2) +
+  stat_summary(geom="line") +
+  ylab("SD parameter of the point\nresponse mixture model") +
+  xlab("Set size") +
+  ggtitle('B')
+
+pb2 <- exp1_data |>
+  filter(exp_type == "SetS") |>
+  group_by(setsize, subject) |>
+  ggplot(aes(setsize, arc)) +
+  stat_summary(geom="point", size=2) +
+  stat_summary(geom="line") +
+  ylab('Mean Arc Width') +
+  xlab('Set size')
+
+
+pb1+pb2
+
+```
+
+
+```{r, fig.width=3, fig.height=3}
+ss_arc <- exp1_data |>
+  filter(exp_type == "SetS") |>
+  group_by(subject) |>
+  mutate(arc_subj = mean(arc)) |>
+  group_by(setsize) |>
+  summarise(arc_mean = mean(arc),
+            arc_se = sd(arc-arc_subj)/sqrt(length(arc)),
+            raw_sd = sd(resperr))
+
+ss_mm1 <- ss_mm |>
+  group_by(subject) |>
+  mutate(sd_subj = mean(sdrad)) |>
+  group_by(setsize) |>
+  summarise(sd = mean(sdrad),
+            sd_se = sd(sd-sd_subj)/sqrt(length(sd)),
+            kappa = mean(kappa),
+            pmem = mean(p_t))
+
+ss_joint <- ss_arc |>left_join(ss_mm1)
+
+lm(ss_joint$sd ~ ss_joint$arc_mean) |>summary()
+
+pc1 <- ss_joint |>
+  ggplot(aes(sd, arc_mean)) +
+  geom_point(size=2) +
+  # geom_line() +
+  geom_smooth(method=lm, se=F) +
+  #geom_errorbarh(aes(xmin=sd_mean-1.96*sd_se, xmax=sd_mean+1.96*sd_se), height=0.5) +
+  #geom_errorbar(aes(ymin= arc_mean-1.96*arc_se, ymax=arc_mean+1.96*arc_se), width=0.5) +
+  xlab("SD parameter of the point\nresponse mixture model") +
+  ylab("Mean arc width") +
+  ggtitle('C')
+
+pc1
+```
+
+
+### Plot the effect of time on sd(angle error) and the mean(arcwidth)
+
+```{r fig.width=4, fig.height=4}
+exp1_data |>
+  filter(exp_type == "Time") |>
+  group_by(encodingtime, delay, subject) |>
+  summarise(err = sd(resperr)) |>
+  Rmisc::normDataWithin("subject","err") |>
+  ggplot(aes(encodingtime, errNormed, color=as.factor(delay)))  +
+  stat_summary(geom="pointrange") +
+  stat_summary(geom="line")+
+  ylab('SD(angle error)')
+  theme(legend.position = "none")
+
+exp1_data |>
+  filter(exp_type == "Time") |>
+  group_by(encodingtime, delay, subject) |>
+  summarise(arc = mean(arc)) |>
+  Rmisc::normDataWithin("subject","arc") |>
+  ggplot(aes(encodingtime, arcNormed, color=as.factor(delay)))  +
+  stat_summary(geom="pointrange") +
+  stat_summary(geom="line")+
+  ylab('Mean Arc Width') +
+  scale_color_discrete('Delay')
+
+
+```
+
+### Fit 2-component mixture model to the time data
+
+```{r}
+#| message: FALSE
+time_mm <- exp1_data |>
+  filter(exp_type == "Time") |>
+  group_by(encodingtime,delay, subject) |>
+  mutate(id = paste0(encodingtime, "_", delay)) |>
+  do({fit_mixtur(., model = "2_component", unit = "radians", id_var = "id", 
+      response_var = "responseColor", target_var = "presentedColor")}) |>
+  select(-id) |>
+  mutate(sdrad = bmm::k2sd(kappa))
+
+
+pd1 <- time_mm |>
+  ggplot(aes(encodingtime, sdrad, color=as.factor(delay)))  +
+  stat_summary(geom="point", size=2) +
+  stat_summary(geom="line")+
+  ylab("SD parameter of the point\nresponse mixture model") +
+  xlab('Encoding time') +
+  theme(legend.position= "") +
+  ggtitle('D')
+
+pd2 <- exp1_data |>
+  filter(exp_type == "Time") |>
+  group_by(encodingtime, delay, subject) |>
+  summarise(arc = mean(arc)) |>
+  Rmisc::normDataWithin("subject","arc") |>
+  ggplot(aes(encodingtime, arcNormed, color=as.factor(delay)))  +
+  stat_summary(geom="point", size=2) +
+  stat_summary(geom="line")+
+  ylab('Mean Arc Width') +
+  xlab('Encoding time') +
+  scale_color_discrete('Delay') +
+  theme(legend.justification.inside = c(1,1),
+        legend.position = "inside")
+
+pd1+pd2
+```
+
+```{r, fig.width=3, fig.height=3}
+time_arc <- exp1_data |>
+  filter(exp_type == "Time") |>
+  group_by(subject) |>
+  mutate(arc_subj = mean(arc)) |>
+  group_by(encodingtime, delay) |>
+  summarise(arc_mean = mean(arc),
+            arc_se = sd(arc-arc_subj)/sqrt(length(arc)))
+
+time_mm1 <- time_mm |>
+  group_by(subject) |>
+  mutate(sd_subj = mean(sdrad)) |>
+  group_by(encodingtime, delay) |>
+  summarise(sd = mean(sdrad),
+            sd_se = sd(sd-sd_subj)/sqrt(length(sd)),
+            kappa = mean(kappa),
+            pmem = mean(p_t))
+
+
+time_joint <- time_arc |>left_join(time_mm1)
+
+lm(time_joint$sd ~ time_joint$arc_mean) |>summary()
+
+pe1 <- time_joint |>
+  ggplot(aes(sd, arc_mean)) +
+  geom_point(size=2) +
+  # geom_line() +
+  geom_smooth(method=lm, se=F) +
+  #geom_errorbarh(aes(xmin=sd_mean-1.96*sd_se, xmax=sd_mean+1.96*sd_se), height=0.5) +
+  #geom_errorbar(aes(ymin= arc_mean-1.96*arc_se, ymax=arc_mean+1.96*arc_se), width=0.5) +
+  xlab("SD parameter of the point\nresponse mixture model") +
+  ylab("Mean arc width") +
+  ggtitle('E')
+
+pe1
+```
+
+### Combine all figures
+
+```{r fig.width=10, fig.height=11}
+(pa1+pa2) / (pb1+pb2+pc1) / (pd1+pd2+pe1)
+ggsave('img/fig3.1.png', units='in', width=10, height=11)
+```
+
+
+```{r}
+time_joint <- mutate(time_joint, procedure="Time")
+ss_joint <- mutate(ss_joint, procedure="Set Size")
+both <- bind_rows(time_joint, ss_joint)
+
+ggplot(both, aes(sd, arc_mean, color=procedure)) +
+  geom_point() +
+  geom_smooth(method="lm", se=F)
+```
+

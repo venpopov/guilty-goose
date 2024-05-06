@@ -191,6 +191,17 @@
       ],
       "Hash": "a45594a00f5dbb073d5ec9f48592a08a"
     },
+    "Rmisc": {
+      "Package": "Rmisc",
+      "Version": "1.5.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "lattice",
+        "plyr"
+      ],
+      "Hash": "c3c3d6c3abc276bc7849835d5d54c44d"
+    },
     "StanHeaders": {
       "Package": "StanHeaders",
       "Version": "2.32.7",
@@ -1564,6 +1575,25 @@
       ],
       "Hash": "5c2161cc9fddf073ebfd2d9e25a3bf61"
     },
+    "mixtur": {
+      "Package": "mixtur",
+      "Version": "1.2.2.9000",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "venpopov",
+      "RemoteRepo": "mixtur",
+      "RemoteRef": "master",
+      "RemoteSha": "db98c7b10b168c715007efbc7b164b92bb59b3bf",
+      "Requirements": [
+        "R",
+        "dplyr",
+        "ggplot2",
+        "rlang",
+        "tidyr"
+      ],
+      "Hash": "25f00de960bec22313559ba624bddf98"
+    },
     "modelr": {
       "Package": "modelr",
       "Version": "0.1.11",
@@ -1667,6 +1697,24 @@
         "utils"
       ],
       "Hash": "5410df8d22bd36e616f2a2343dbb328c"
+    },
+    "patchwork": {
+      "Package": "patchwork",
+      "Version": "1.2.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "cli",
+        "ggplot2",
+        "grDevices",
+        "graphics",
+        "grid",
+        "gtable",
+        "rlang",
+        "stats",
+        "utils"
+      ],
+      "Hash": "9c8ab14c00ac07e9e04d1664c0b74486"
     },
     "pillar": {
       "Package": "pillar",
