@@ -16,7 +16,8 @@ options(
   mc.cores = 4,
   brms.backend = "cmdstanr",
   tidyverse.quiet = TRUE,
-  dplyr.summarise.inform = FALSE
+  dplyr.summarise.inform = FALSE,
+  bmm.sort_data = TRUE
 )
 
 # Targetst pipeline
@@ -35,14 +36,21 @@ list(
 
   # fit mixture2p ML to exp1 data
   tar_target(
-    exp1_2p_ml, 
-    fit_2p_ml(exp1_data, 
-             by = c("subject", "exp_type", "setsize", "encodingtime", "delay"), 
-             response_var = "responseColor", 
-             target_var = "presentedColor")
+    exp1_2p_ml,
+    fit_2p_ml(exp1_data,
+      by = c("subject", "exp_type", "setsize", "encodingtime", "delay"),
+      response_var = "responseColor",
+      target_var = "presentedColor"
+    )
   ),
 
-  # fit bmm to exp1 data
+  # fit bmm mixture2p to exp1 data
   tar_target(exp1_2p_ss_bmm, fit_2p_ss_bmm1(exp1_data)),
-  tar_target(exp1_2p_time_bmm, fit_2p_time_bmm1(exp1_data))
+  tar_target(exp1_2p_time_bmm, fit_2p_time_bmm1(exp1_data)),
+
+  # fit bmm sdm to exp1 data
+  tar_target(exp1_sdm_ss_ss_bmm, fit_sdm_ss_ss_bmm1(exp1_data)),
+  # tar_target(exp1_sdm_ss_time_bmm, fit_sdm_ss_time_bmm1(exp1_data)),
+  # tar_target(exp1_sdm_time_ss_bmm, fit_sdm_time_ss_bmm1(exp1_data)),
+  tar_target(exp1_sdm_time_time_bmm, fit_sdm_time_time_bmm1(exp1_data))
 )
